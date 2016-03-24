@@ -1,0 +1,64 @@
+% Radial Shear interferometer
+%
+% Uses LightPipes for Matlab
+% http://www.okotech.com/lightpipes-mathcad-matlab-download
+
+clear;
+m = 1;
+cm = 1e-2*m;
+mm = 1e-3*m;
+nm = 1e-9*m;
+rad = 1;
+size = 4*cm;
+lambda = 500*nm;
+N = 64;
+Rp = 1*cm;
+Rplate = 0.5;
+figure(1);
+M = 1.3;
+nZer = 2;
+mZer = 0;
+RZer = 10*mm;
+AZer = 10*rad;
+F = LPBegin(size,lambda,N);
+F = LPCircAperture(Rp,0,0,F);
+F = LPZernike(nZer,mZer,RZer,AZer,F);
+F1 = LPIntAttenuator(Rplate,F);
+F2 = LPIntAttenuator(1-Rplate,F);
+F1 = LPInterpol(size,N,0,0,0,M,F1);
+F = LPBeamMix(F1,F2);
+I = LPIntensity(1,F);
+str1 = sprintf('Defocus with:\nM=%3.1f\nLPZernike(%d,%d,%d*mm,%d*rad,F)',M,nZer,mZer,RZer/mm,AZer);
+subplot(1,3,1),imshow(I),title(str1,'fontsize',8);
+M = 1.3;
+nZer = 4;
+mZer = 0;
+RZer = 10*mm;
+AZer = 10*rad;
+F = LPBegin(size,lambda,N);
+F = LPCircAperture(Rp,0,0,F);
+F = LPZernike(nZer,mZer,RZer,AZer,F);
+F1 = LPIntAttenuator(Rplate,F);
+F2 = LPIntAttenuator(1-Rplate,F);
+F1 = LPInterpol(size,N,0,0,0,M,F1);
+F = LPBeamMix(F1,F2);
+I = LPIntensity(1,F);
+str1 = sprintf('Spherical aberration with:\nM=%3.1f\nLPZernike(%d,%d,%d*mm,%d*rad,F)',M,nZer,mZer,RZer/mm,AZer);
+subplot(1,3,2),imshow(I),title(str1,'fontsize',8);
+M = 1.3;
+nZer = 10;
+mZer = 4;
+RZer = 10*mm;
+AZer = 10*rad;
+F = LPBegin(size,lambda,N);
+F = LPCircAperture(Rp,0,0,F);
+F = LPZernike(nZer,mZer,RZer,AZer,F);
+F1 = LPIntAttenuator(Rplate,F);
+F2 = LPIntAttenuator(1-Rplate,F);
+F1 = LPInterpol(size,N,0,0,0,M,F1);
+F = LPBeamMix(F1,F2);
+I = LPIntensity(1,F);
+str1 = sprintf('High order with:\nM=%3.1f\nLPZernike(%d,%d,%d*mm,%d*rad,F)',M,nZer,mZer,RZer/mm,AZer);
+subplot(1,3,3),imshow(I),title(str1,'fontsize',8);
+flnm = sprintf('(man0022.emf)');flnm=strcat('\it',flnm);
+text(100,500,flnm);
